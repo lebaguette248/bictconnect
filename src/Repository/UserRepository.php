@@ -6,6 +6,7 @@ use App\DTO\FilterUser;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -17,7 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,
+                                public LoggerInterface $logger)
     {
         parent::__construct($registry, User::class);
     }
@@ -41,6 +43,10 @@ class UserRepository extends ServiceEntityRepository
     }
 
     public function filterAll(FilterUser $dtoFilter){
+        $this->logger->info("Filtermethode für User aufgerufen");
+
+
+
         $qu = $this->createQueryBuilder("u");
 
         if($dtoFilter->name)    {

@@ -2,15 +2,10 @@
 
 namespace App\DTO;
 
+use App\Validator\UserDoesExist;
+
 class CreateUpdateMessage
 {
-    public function mapEntityToDTO(object $entity)  :object
-    {
-        $dto = new ShowMessage();
-        $dto->title = $entity->gettitle();
-        $dto->content = $entity->getcontent();
-        $dto->user = $entity->getuser();
-
-        return $dto;
-    }
+    #[UserDoesExist]
+    public ?int $id_user;
 }

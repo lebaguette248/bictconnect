@@ -7,25 +7,26 @@ use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\Controller\Annotations\Post;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
 #[Route("/api", name: "api_")]
-class MessageController extends AbstractController
+class MessageController extends AbstractFOSRestController
 {
-    public function __construct(private SerializerInterface $serializer,
+    public function __construct(private SerializerInterface $serializer,        //constructor
                                 private MessageRepository $repository,
                                 private UserRepository $userRepository){}
 
 
-    #[Route('/message', name: 'app_message')]
-    public function index(Request $request): JsonResponse
+    #[Post('/message', name: 'app_message')]
+    public function create(Request $request): JsonResponse
     {
-        $dto = $this->serializer->deserialize($request->getContent(), CreateUpdateMessage::class, "json");
+        $dto = $this->serializer->deserialize($request->getContent(), CreateUpdateMessage::class, "json");  //handles DTO Deserialization
 
         $entity = new Message();
         $entity->setTitle($dto->title);

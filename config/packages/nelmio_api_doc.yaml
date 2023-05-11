@@ -1,0 +1,10 @@
+nelmio_api_doc:
+    use_validation_groups: true
+    documentation:
+        info:
+            title: Chat/BoardSite
+            description: Simple Chat/Board Site where User can make Login to see msg of himself and others
+            version: 1.0.0
+    areas:
+        path_patterns:
+            - ^/api(?!/docs$)
