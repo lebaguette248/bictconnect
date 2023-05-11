@@ -123,7 +123,13 @@ class UserController extends AbstractFOSRestController
 
         $this->repository->save($entity, true);
 
-        return $this->json("Post hat funktioniert");
+        $response =[
+            "success" => "User {$dto->username} hat funktioniert",
+            "entity" => $this->serializer->serialize($entity, "json")
+        ];
+
+        return (new JsonResponse())->setContent(json_encode($response));
+//        return $this->json("Postaktion des Users {$dto->username} hat funktioniert");
     }
 
 
@@ -160,15 +166,9 @@ class UserController extends AbstractFOSRestController
 
 
 
-
-
     #[Rest\Delete('/user/{id}', name: 'app_users_delete')]
     public function delete($id, Request $request): JsonResponse
     {
-        //if($if == "ja") {
-        //
-        //    }
-
         $entityToDelete = $this->repository->find($id);
         $this->repository->remove($entityToDelete, true);
 

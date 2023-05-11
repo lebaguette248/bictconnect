@@ -9,6 +9,8 @@ use OpenApi\Attributes\Property;
 
 class ShowUser
 {
+    public ?int  $id =null;
+
     public ?string $name = null;
 
     public ?string $username = null;

@@ -7,6 +7,16 @@
     <style>
         body {
             font-family: Segoe UI;
+
+            width: 99vw;
+            height: 99vh;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            overflow: hidden;
         }
         th, td{
             padding: 8px;
@@ -19,7 +29,16 @@
         }
     </style>
 
+    <div>
+        <form action="./user" method="POST">
+            <input type="text" placeholder="please enter Name">
+            <input type="text" placeholder="please enter Username">
+            <input type="password" placeholder="please enter Password">
+            <input type="submit">
+        </form>
+    </div>
     <h1>Alle User</h1>
+    <div>
 
     <table>
         <tr>
@@ -41,5 +60,5 @@
         {% endfor %}
 
     </table>
-
+    </div>
 {% endblock %}
