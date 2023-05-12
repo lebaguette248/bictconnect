@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\CreateUpdateMessage;
+use App\DTO\FilterUser;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
@@ -23,26 +24,32 @@ class MessageController extends AbstractFOSRestController
                                 private UserRepository $userRepository){}
 
 
-    #[Post('/message', name: 'app_message')]
-    public function create(Request $request): JsonResponse
+//    #[Post('/message', name: 'app_message')]
+//    public function create(Request $request): JsonResponse
+//    {
+//        $dto = $this->serializer->deserialize($request->getContent(), CreateUpdateMessage::class, "json");  //handles DTO Deserialization
+//        $entity = new Message();
+//        $entity->setTitle($dto->title);
+//        $entity->setContent($dto->content);
+//        $entity->setUser($dto->user);
+//        $this->repository->save($entity, true);
+//        $user = $this->userRepository->find(1); // TODO: set to message dto id field
+//        $this->repository->save($entity);
+//        return $this->json("Post Funktioniert");
+//    }
+
+    #[Rest\Get('/message', name: 'app_users')]
+    public function index(Request $request): JsonResponse           //Get function
     {
-        $dto = $this->serializer->deserialize($request->getContent(), CreateUpdateMessage::class, "json");  //handles DTO Deserialization
+        global $con = new \PDO(Datenbank scheiss)
 
-        $entity = new Message();
-        $entity->setTitle($dto->title);
-        $entity->setContent($dto->content);
-        $entity->setUser($dto->user);
+        $sql->con = "SELECT * FROM messages WHERE username = :username";
+        $sql->bindParam(':username', $username);
+        $sql->execute();
+        $data = $sql->fetchAll();
 
-        $this->repository->save($entity, true);
-
-
-
-        $user = $this->userRepository->find(1); // TODO: set to message dto id field
-
-        $this->repository->save($entity);
-
-
-
-        return $this->json("Post Funktioniert");
+        return
     }
+
+
 }

@@ -9,5 +9,4 @@ class ShowMessage
 
     public ?string $content = null;
 
-
 }
