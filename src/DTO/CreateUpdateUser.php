@@ -23,4 +23,6 @@ class CreateUpdateUser
 
     #[Assert\NotBlank(message: "Passwort ist Pflicht", groups: ["create", "update"])]
     public ?string $password = null;
+
+    public ?bool $is_admin = false;
 }

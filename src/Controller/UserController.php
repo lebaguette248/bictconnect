@@ -21,6 +21,7 @@ use OpenApi\Attributes\RequestBody;
 use OpenApi\Attributes\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -40,9 +41,7 @@ class UserController extends AbstractFOSRestController
     public function __construct(private SerializerInterface $serializer,        //constructor
                                 private UserRepository $repository,
                                 private ShowUserMapper $mapper,
-                                private ValidatorInterface $validator)  {
-
-    }
+                                private ValidatorInterface $validator)  {}
 
 
     /**
@@ -79,6 +78,17 @@ class UserController extends AbstractFOSRestController
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Post function vor Creating
      * @param Request $request
@@ -95,20 +105,20 @@ class UserController extends AbstractFOSRestController
             type: 'string'))]
 
     #[Rest\Post('/user', name: 'app_users_post')]                           //create/post function, handles writing info to database
-    public function create(Request $request): JsonResponse
+    public function create(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $dto = $this->serializer->deserialize($request->getContent(), CreateUpdateUser::class, "json");
-
         $errors = $this->validator->validate($dto, groups: ["create"]);
-
-
-        if($errors->count() > 0)    {
+        if($errors->count() > 0)
+        {
             $errorsStringarray = [];
-            foreach($errors as $error){
+            foreach($errors as $error)
+            {
                 $errorsStringarray[] = $error->getMessage();
             }
             return $this->json($errorsStringarray, status: 400);
         }
+
 
         $userwithusername = $this->repository->findBy(["username"=>$dto->username]);        //sucht nach username mit gleichen namen und speichert ihn in $userwithusername
         if($userwithusername)
@@ -116,10 +126,23 @@ class UserController extends AbstractFOSRestController
             return $this->json("username bereits vorhanden");
         }
 
+
         $entity = new User();
         $entity->setName($dto->name);
         $entity->setUsername($dto->username);
-        $entity->setPassword($dto->password);
+
+        $hashedPassword = $passwordHasher->hashPassword($entity, $dto->password);
+        $entity->setPassword($hashedPassword);
+
+
+        if($dto->is_admin)
+        {
+            $entity->setRoles(["ROLE_ADMIN", "ROLE_USER"]);
+        }
+        else {
+            $entity->setRoles(["ROLE_USER"]);
+        }
+
 
         $this->repository->save($entity, true);
 
@@ -131,6 +154,14 @@ class UserController extends AbstractFOSRestController
         return (new JsonResponse())->setContent(json_encode($response));
 //        return $this->json("Postaktion des Users {$dto->username} hat funktioniert");
     }
+
+
+
+
+
+
+
+
 
 
 
